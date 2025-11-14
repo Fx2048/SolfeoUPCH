@@ -1,0 +1,32 @@
+
+"""
+FROM python:3.10-slim
+
+# Instalar dependencias del sistema
+RUN apt-get update && apt-get install -y \
+    default-jre \
+    lilypond \
+    timidity \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# Descargar ANTLR
+RUN wget https://www.antlr.org/download/antlr-4.13.1-complete.jar \
+    -O /usr/local/lib/antlr-4.13.1-complete.jar
+
+# Configurar directorio de trabajo
+WORKDIR /app
+
+# Copiar archivos
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+# Generar parser
+RUN java -jar /usr/local/lib/antlr-4.13.1-complete.jar \
+    -Dlanguage=Python3 -visitor Algoritmia.g4
+
+# Punto de entrada
+ENTRYPOINT ["python3", "algoritmia.py"]
+"""
