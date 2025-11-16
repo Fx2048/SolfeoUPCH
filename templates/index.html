@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algoritmia - Lenguaje de Programación Musical</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .panel {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .panel h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        #codeEditor {
+            width: 100%;
+            height: 400px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            resize: vertical;
+            background: #1e1e1e;
+            color: #d4d4d4;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        select {
+            padding: 10px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            font-size: 14px;
+        }
+
+        #output {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 200px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .error {
+            color: #ff6b6b;
+        }
+
+        .success {
+            color: #51cf66;
+        }
+
+        .files-section {
+            margin-top: 20px;
+        }
+
+        .file-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .file-item h3 {
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .file-actions button {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .input-section {
+            margin: 15px 0;
+        }
+
+        #userInput {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+        }
+
+        @media (max-width: 968px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎵 Algoritmia</h1>
+            <p>Lenguaje de Programación Musical - Intérprete Web</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Panel de código -->
+            <div class="panel">
+                <h2>📝 Editor de Código</h2>
+
+                <div class="controls">
+                    <select id="exampleSelect">
+                        <option value="">Cargar ejemplo...</option>
+                    </select>
+                    <button class="btn-primary" onclick="executeCode()">▶ Ejecutar</button>
+                    <button class="btn-secondary" onclick="clearEditor()">🗑️ Limpiar</button>
+                </div>
+
+                <textarea id="codeEditor" placeholder="Escribe tu código Algoritmia aquí...">Main |:
+    <w> "Hello Algoritmia"
+    (:) {C D E F G A B}
+:|</textarea>
+
+                <div class="input-section">
+                    <label for="userInput"><strong>Entrada del usuario (opcional):</strong></label>
+                    <textarea id="userInput" rows="3" placeholder="Escribe aquí los valores de entrada si el programa usa <?>"></textarea>
+                </div>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Ejecutando código...</p>
+                </div>
+            </div>
+
+            <!-- Panel de resultados -->
+            <div class="panel">
+                <h2>📊 Resultados</h2>
+
+                <h3>Salida del programa:</h3>
+                <div id="output">Esperando ejecución...</div>
+
+                <div class="files-section" id="filesSection" style="display: none;">
+                    <h3>📁 Archivos Generados</h3>
+                    <div id="generatedFiles"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentFiles = {};
+
+        // Cargar ejemplos al inicio
+        fetch('/api/examples')
+            .then(response => response.json())
+            .then(examples => {
+                const select = document.getElementById('exampleSelect');
+                Object.keys(examples).forEach(key => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = examples[key].name;
+                    select.appendChild(option);
+                });
+
+                select.addEventListener('change', function() {
+                    if (this.value) {
+                        document.getElementById('codeEditor').value = examples[this.value].code;
+                        this.value = '';
+                    }
+                });
+            });
+
+        function clearEditor() {
+            document.getElementById('codeEditor').value = '';
+            document.getElementById('userInput').value = '';
+            document.getElementById('output').textContent = 'Editor limpiado.';
+            document.getElementById('filesSection').style.display = 'none';
+        }
+
+        async function executeCode() {
+            const code = document.getElementById('codeEditor').value;
+            const userInput = document.getElementById('userInput').value;
+            const output = document.getElementById('output');
+            const loading = document.getElementById('loading');
+            const filesSection = document.getElementById('filesSection');
+
+            if (!code.trim()) {
+                output.innerHTML = '<span class="error">❌ Error: El código está vacío</span>';
+                return;
+            }
+
+            // Mostrar loading
+            loading.style.display = 'block';
+            output.textContent = 'Ejecutando...';
+            filesSection.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/execute', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        code: code,
+                        procedure: 'Main',
+                        input: userInput
+                    })
+                });
+
+                const result = await response.json();
+                loading.style.display = 'none';
+
+                if (result.success) {
+                    output.innerHTML = '<span class="success">✅ Ejecución exitosa</span>\n\n' +
+                                      (result.output || 'Sin salida');
+
+                    // Mostrar archivos generados
+                    if (result.files && Object.keys(result.files).length > 0) {
+                        currentFiles = result.files;
+                        displayFiles(result.files);
+                        filesSection.style.display = 'block';
+                    }
+                } else {
+                    output.innerHTML = '<span class="error">❌ Error:</span>\n\n' +
+                                      (result.error || 'Error desconocido');
+                    if (result.output) {
+                        output.innerHTML += '\n\nSalida:\n' + result.output;
+                    }
+                }
+            } catch (error) {
+                loading.style.display = 'none';
+                output.innerHTML = '<span class="error">❌ Error de conexión:</span>\n\n' + error.message;
+            }
+        }
+
+        function displayFiles(files) {
+            const container = document.getElementById('generatedFiles');
+            container.innerHTML = '';
+
+            if (files.pdf) {
+                container.innerHTML += `
+                    <div class="file-item">
+                        <div>
+                            <h3>📄 Partitura PDF</h3>
+                            <p>Partitura musical generada</p>
+                        </div>
+                        <div class="file-actions">
+                            <button class="btn-success" onclick="window.open('${files.pdf}', '_blank')">Ver</button>
+                            <button class="btn-primary" onclick="downloadFile('${files.pdf}', 'partitura.pdf')">Descargar</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (files.midi) {
+                container.innerHTML += `
+                    <div class="file-item">
+                        <div>
+                            <h3>🎹 Archivo MIDI</h3>
+                            <p>Audio en formato MIDI</p>
+                        </div>
+                        <div class="file-actions">
+                            <button class="btn-primary" onclick="downloadFile('${files.midi}', 'musica.mid')">Descargar</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (files.wav) {
+                container.innerHTML += `
+                    <div class="file-item">
+                        <div>
+                            <h3>🔊 Archivo WAV</h3>
+                            <p>Audio en formato WAV</p>
+                            <audio controls style="margin-top: 10px; width: 100%;">
+                                <source src="${files.wav}" type="audio/wav">
+                            </audio>
+                        </div>
+                        <div class="file-actions">
+                            <button class="btn-primary" onclick="downloadFile('${files.wav}', 'musica.wav')">Descargar</button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function downloadFile(url, filename) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // Atajos de teclado
+        document.getElementById('codeEditor').addEventListener('keydown', function(e) {
+            // Ctrl+Enter para ejecutar
+            if (e.ctrlKey && e.key === 'Enter') {
+                e.preventDefault();
+                executeCode();
+            }
+        });
+    </script>
+</body>
+</html>
