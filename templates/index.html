@@ -11,86 +11,197 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5568d3;
+            --secondary: #764ba2;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --bg-light: #f8fafc;
+            --bg-dark: #1e293b;
+            --text-light: #1e293b;
+            --text-dark: #f1f5f9;
+            --card-light: #ffffff;
+            --card-dark: #334155;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
+            transition: background 0.3s;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            background: var(--card-light);
+            border-radius: 24px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.2);
             overflow: hidden;
+            animation: fadeIn 0.5s;
+        }
+
+        body.dark-mode .container {
+            background: var(--card-dark);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 30px;
-            text-align: center;
+            padding: 40px 30px;
+            position: relative;
+            overflow: hidden;
         }
 
-        header h1 {
-            font-size: 2.5em;
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-title h1 {
+            font-size: 3em;
             margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        header p {
-            font-size: 1.1em;
+        .header-title p {
+            font-size: 1.2em;
             opacity: 0.9;
+        }
+
+        .theme-toggle {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
         }
 
         .main-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            padding: 20px;
+            gap: 30px;
+            padding: 30px;
         }
 
         .panel {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
+            background: var(--bg-light);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+
+        body.dark-mode .panel {
+            background: var(--bg-dark);
+        }
+
+        .panel:hover {
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
         }
 
         .panel h2 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 1.5em;
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        body.dark-mode .panel h2 {
+            color: #818cf8;
+        }
+
+        .editor-container {
+            position: relative;
         }
 
         #codeEditor {
             width: 100%;
-            height: 400px;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
+            height: 450px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 15px;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
             resize: vertical;
             background: #1e1e1e;
             color: #d4d4d4;
+            line-height: 1.6;
+            transition: border-color 0.3s;
+        }
+
+        #codeEditor:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         .controls {
             display: flex;
-            gap: 10px;
-            margin: 15px 0;
+            gap: 12px;
+            margin: 20px 0;
             flex-wrap: wrap;
+            align-items: center;
         }
 
         button {
-            padding: 12px 24px;
+            padding: 14px 28px;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-size: 16px;
             cursor: pointer;
             transition: all 0.3s;
             font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        button:active {
+            transform: scale(0.95);
         }
 
         .btn-primary {
@@ -99,73 +210,129 @@
         }
 
         .btn-primary:hover {
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
         .btn-secondary {
-            background: #6c757d;
+            background: #64748b;
             color: white;
         }
 
         .btn-secondary:hover {
-            background: #5a6268;
+            background: #475569;
+            transform: translateY(-2px);
         }
 
         .btn-success {
-            background: #28a745;
+            background: var(--success);
             color: white;
         }
 
         .btn-success:hover {
-            background: #218838;
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+            transform: translateY(-2px);
         }
 
         select {
-            padding: 10px;
-            border-radius: 8px;
-            border: 2px solid #ddd;
-            font-size: 14px;
+            padding: 14px 20px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            font-size: 15px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 200px;
+        }
+
+        body.dark-mode select {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            border-color: #475569;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         #output {
             background: #1e1e1e;
             color: #d4d4d4;
-            padding: 15px;
-            border-radius: 8px;
-            min-height: 200px;
-            font-family: 'Courier New', monospace;
+            padding: 20px;
+            border-radius: 12px;
+            min-height: 250px;
+            font-family: 'Fira Code', 'Courier New', monospace;
             white-space: pre-wrap;
             overflow-y: auto;
-            max-height: 400px;
+            max-height: 500px;
+            line-height: 1.6;
+            border: 2px solid #e2e8f0;
         }
 
         .error {
-            color: #ff6b6b;
+            color: #fca5a5;
+            font-weight: bold;
         }
 
         .success {
-            color: #51cf66;
+            color: #86efac;
+            font-weight: bold;
         }
 
         .files-section {
-            margin-top: 20px;
+            margin-top: 25px;
+            animation: slideIn 0.5s;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .file-item {
             background: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 10px 0;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        body.dark-mode .file-item {
+            background: var(--card-dark);
+            border-color: #475569;
+        }
+
+        .file-item:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            border-color: var(--primary);
+            transform: translateX(5px);
         }
 
         .file-item h3 {
-            color: #667eea;
+            color: var(--primary);
             margin-bottom: 5px;
+            font-size: 1.2em;
+        }
+
+        body.dark-mode .file-item h3 {
+            color: #818cf8;
         }
 
         .file-actions {
@@ -174,24 +341,25 @@
         }
 
         .file-actions button {
-            padding: 8px 16px;
+            padding: 10px 20px;
             font-size: 14px;
         }
 
         .loading {
             display: none;
             text-align: center;
-            padding: 20px;
+            padding: 30px;
+            animation: fadeIn 0.3s;
         }
 
         .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
-            margin: 0 auto;
+            margin: 0 auto 15px;
         }
 
         @keyframes spin {
@@ -200,30 +368,175 @@
         }
 
         .input-section {
-            margin: 15px 0;
+            margin: 20px 0;
+        }
+
+        .input-section label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        body.dark-mode .input-section label {
+            color: var(--text-dark);
         }
 
         #userInput {
             width: 100%;
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-family: 'Fira Code', 'Courier New', monospace;
             resize: vertical;
+            transition: all 0.3s;
+            background: white;
         }
 
-        @media (max-width: 968px) {
+        body.dark-mode #userInput {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            border-color: #475569;
+        }
+
+        #userInput:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        audio {
+            width: 100%;
+            margin-top: 15px;
+            border-radius: 8px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .stat-card h4 {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            opacity: 0.9;
+        }
+
+        .keyboard-hint {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        body.dark-mode .keyboard-hint {
+            background: rgba(129, 140, 248, 0.1);
+            color: var(--text-dark);
+        }
+
+        @media (max-width: 1200px) {
             .main-content {
                 grid-template-columns: 1fr;
             }
+
+            .header-title h1 {
+                font-size: 2.5em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            header {
+                padding: 30px 20px;
+            }
+
+            .header-title h1 {
+                font-size: 2em;
+            }
+
+            .main-content {
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .controls {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            button, select {
+                width: 100%;
+            }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            display: none;
+            animation: slideInRight 0.3s;
+            z-index: 1000;
+            max-width: 350px;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--error);
         }
     </style>
 </head>
 <body>
+    <div class="notification" id="notification"></div>
+
     <div class="container">
         <header>
-            <h1>🎵 Algoritmia</h1>
-            <p>Lenguaje de Programación Musical - Intérprete Web</p>
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>🎵 Algoritmia</h1>
+                </div>
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <span id="themeIcon">🌙</span> Cambiar Tema
+                </button>
+            </div>
+            <p style="margin-top: 15px;">Lenguaje de Programación Musical - Intérprete Web Interactivo</p>
         </header>
 
         <div class="main-content">
@@ -233,25 +546,39 @@
 
                 <div class="controls">
                     <select id="exampleSelect">
-                        <option value="">Cargar ejemplo...</option>
+                        <option value="">📚 Cargar ejemplo...</option>
                     </select>
-                    <button class="btn-primary" onclick="executeCode()">▶ Ejecutar</button>
-                    <button class="btn-secondary" onclick="clearEditor()">🗑️ Limpiar</button>
+                    <button class="btn-primary" onclick="executeCode()">
+                        ▶ Ejecutar
+                    </button>
+                    <button class="btn-secondary" onclick="clearEditor()">
+                        🗑️ Limpiar
+                    </button>
+                    <button class="btn-warning" onclick="saveCode()">
+                        💾 Guardar
+                    </button>
                 </div>
 
-                <textarea id="codeEditor" placeholder="Escribe tu código Algoritmia aquí...">Main |:
+                <div class="editor-container">
+                    <textarea id="codeEditor" placeholder="Escribe tu código Algoritmia aquí..." spellcheck="false">Main |:
     <w> "Hello Algoritmia"
     (:) {C D E F G A B}
 :|</textarea>
+                </div>
+
+                <div class="keyboard-hint">
+                    💡 <strong>Atajo:</strong> Presiona <kbd>Ctrl+Enter</kbd> para ejecutar el código
+                </div>
 
                 <div class="input-section">
-                    <label for="userInput"><strong>Entrada del usuario (opcional):</strong></label>
+                    <label for="userInput">📥 Entrada del usuario (opcional):</label>
                     <textarea id="userInput" rows="3" placeholder="Escribe aquí los valores de entrada si el programa usa <?>"></textarea>
                 </div>
 
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
-                    <p>Ejecutando código...</p>
+                    <p><strong>Ejecutando código...</strong></p>
+                    <p style="font-size: 14px; opacity: 0.7;">Por favor espera</p>
                 </div>
             </div>
 
@@ -259,11 +586,22 @@
             <div class="panel">
                 <h2>📊 Resultados</h2>
 
-                <h3>Salida del programa:</h3>
-                <div id="output">Esperando ejecución...</div>
+                <div class="stats" id="stats" style="display: none;">
+                    <div class="stat-card">
+                        <h4 id="noteCount">0</h4>
+                        <p>Notas</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4 id="fileCount">0</h4>
+                        <p>Archivos</p>
+                    </div>
+                </div>
+
+                <h3 style="margin: 20px 0 10px 0; color: var(--primary);">💬 Salida del programa:</h3>
+                <div id="output">Esperando ejecución... 🎼</div>
 
                 <div class="files-section" id="filesSection" style="display: none;">
-                    <h3>📁 Archivos Generados</h3>
+                    <h3 style="color: var(--primary); margin-bottom: 15px;">📁 Archivos Generados</h3>
                     <div id="generatedFiles"></div>
                 </div>
             </div>
@@ -272,6 +610,7 @@
 
     <script>
         let currentFiles = {};
+        let isDarkMode = false;
 
         // Cargar ejemplos al inicio
         fetch('/api/examples')
@@ -288,16 +627,46 @@
                 select.addEventListener('change', function() {
                     if (this.value) {
                         document.getElementById('codeEditor').value = examples[this.value].code;
+                        showNotification('Ejemplo cargado correctamente', 'success');
                         this.value = '';
                     }
                 });
+            })
+            .catch(error => {
+                showNotification('Error al cargar ejemplos', 'error');
             });
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode');
+            document.getElementById('themeIcon').textContent = isDarkMode ? '☀️' : '🌙';
+            localStorage.setItem('darkMode', isDarkMode);
+        }
+
+        // Cargar preferencia de tema
+        if (localStorage.getItem('darkMode') === 'true') {
+            toggleTheme();
+        }
 
         function clearEditor() {
             document.getElementById('codeEditor').value = '';
             document.getElementById('userInput').value = '';
-            document.getElementById('output').textContent = 'Editor limpiado.';
+            document.getElementById('output').textContent = 'Editor limpiado. 🧹';
             document.getElementById('filesSection').style.display = 'none';
+            document.getElementById('stats').style.display = 'none';
+            showNotification('Editor limpiado', 'success');
+        }
+
+        function saveCode() {
+            const code = document.getElementById('codeEditor').value;
+            const blob = new Blob([code], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'programa.alg';
+            a.click();
+            URL.revokeObjectURL(url);
+            showNotification('Código guardado', 'success');
         }
 
         async function executeCode() {
@@ -306,16 +675,18 @@
             const output = document.getElementById('output');
             const loading = document.getElementById('loading');
             const filesSection = document.getElementById('filesSection');
+            const stats = document.getElementById('stats');
 
             if (!code.trim()) {
                 output.innerHTML = '<span class="error">❌ Error: El código está vacío</span>';
+                showNotification('El código está vacío', 'error');
                 return;
             }
 
-            // Mostrar loading
             loading.style.display = 'block';
-            output.textContent = 'Ejecutando...';
+            output.textContent = 'Ejecutando... ⏳';
             filesSection.style.display = 'none';
+            stats.style.display = 'none';
 
             try {
                 const response = await fetch('/api/execute', {
@@ -337,22 +708,30 @@
                     output.innerHTML = '<span class="success">✅ Ejecución exitosa</span>\n\n' +
                                       (result.output || 'Sin salida');
 
-                    // Mostrar archivos generados
                     if (result.files && Object.keys(result.files).length > 0) {
                         currentFiles = result.files;
                         displayFiles(result.files);
                         filesSection.style.display = 'block';
+                        
+                        // Mostrar estadísticas
+                        stats.style.display = 'grid';
+                        document.getElementById('fileCount').textContent = Object.keys(result.files).length;
+                        document.getElementById('noteCount').textContent = '♪';
+                        
+                        showNotification('¡Ejecución exitosa!', 'success');
                     }
                 } else {
                     output.innerHTML = '<span class="error">❌ Error:</span>\n\n' +
                                       (result.error || 'Error desconocido');
                     if (result.output) {
-                        output.innerHTML += '\n\nSalida:\n' + result.output;
+                        output.innerHTML += '\n\n📄 Salida:\n' + result.output;
                     }
+                    showNotification('Error en la ejecución', 'error');
                 }
             } catch (error) {
                 loading.style.display = 'none';
                 output.innerHTML = '<span class="error">❌ Error de conexión:</span>\n\n' + error.message;
+                showNotification('Error de conexión', 'error');
             }
         }
 
@@ -365,11 +744,15 @@
                     <div class="file-item">
                         <div>
                             <h3>📄 Partitura PDF</h3>
-                            <p>Partitura musical generada</p>
+                            <p>Partitura musical generada automáticamente</p>
                         </div>
                         <div class="file-actions">
-                            <button class="btn-success" onclick="window.open('${files.pdf}', '_blank')">Ver</button>
-                            <button class="btn-primary" onclick="downloadFile('${files.pdf}', 'partitura.pdf')">Descargar</button>
+                            <button class="btn-success" onclick="window.open('${files.pdf}', '_blank')">
+                                👁️ Ver
+                            </button>
+                            <button class="btn-primary" onclick="downloadFile('${files.pdf}', 'partitura.pdf')">
+                                ⬇️ Descargar
+                            </button>
                         </div>
                     </div>
                 `;
@@ -380,10 +763,15 @@
                     <div class="file-item">
                         <div>
                             <h3>🎹 Archivo MIDI</h3>
-                            <p>Audio en formato MIDI</p>
+                            <p>Audio en formato MIDI estándar</p>
                         </div>
                         <div class="file-actions">
-                            <button class="btn-primary" onclick="downloadFile('${files.midi}', 'musica.mid')">Descargar</button>
+                            <button class="btn-primary" onclick="downloadFile('${files.midi}', 'musica.mid')">
+                                ⬇️ Descargar
+                            </button>
+                            <button class="btn-success" onclick="playMidi('${files.midi}')">
+                                🔊 Reproducir
+                            </button>
                         </div>
                     </div>
                 `;
@@ -391,17 +779,20 @@
 
             if (files.wav) {
                 container.innerHTML += `
-                    <div class="file-item">
-                        <div>
-                            <h3>🔊 Archivo WAV</h3>
-                            <p>Audio en formato WAV</p>
-                            <audio controls style="margin-top: 10px; width: 100%;">
-                                <source src="${files.wav}" type="audio/wav">
-                            </audio>
+                    <div class="file-item" style="flex-direction: column; align-items: flex-start;">
+                        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <div>
+                                <h3>🔊 Archivo WAV</h3>
+                                <p>Audio de alta calidad en formato WAV</p>
+                            </div>
+                            <button class="btn-primary" onclick="downloadFile('${files.wav}', 'musica.wav')">
+                                ⬇️ Descargar
+                            </button>
                         </div>
-                        <div class="file-actions">
-                            <button class="btn-primary" onclick="downloadFile('${files.wav}', 'musica.wav')">Descargar</button>
-                        </div>
+                        <audio controls style="width: 100%;">
+                            <source src="${files.wav}" type="audio/wav">
+                            Tu navegador no soporta el elemento de audio.
+                        </audio>
                     </div>
                 `;
             }
@@ -414,16 +805,52 @@
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
+            showNotification('Descarga iniciada', 'success');
+        }
+
+        function playMidi(url) {
+            showNotification('Abriendo reproductor MIDI...', 'success');
+            window.open(url, '_blank');
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
         }
 
         // Atajos de teclado
         document.getElementById('codeEditor').addEventListener('keydown', function(e) {
-            // Ctrl+Enter para ejecutar
             if (e.ctrlKey && e.key === 'Enter') {
                 e.preventDefault();
                 executeCode();
             }
+            
+            // Tab para indentar
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
+                this.value = this.value.substring(0, start) + '    ' + this.value.substring(end);
+                this.selectionStart = this.selectionEnd = start + 4;
+            }
         });
+
+        // Autoguardado en localStorage
+        document.getElementById('codeEditor').addEventListener('input', function() {
+            localStorage.setItem('algoritmiaCode', this.value);
+        });
+
+        // Cargar código guardado
+        const savedCode = localStorage.getItem('algoritmiaCode');
+        if (savedCode) {
+            document.getElementById('codeEditor').value = savedCode;
+        }
     </script>
 </body>
 </html>
