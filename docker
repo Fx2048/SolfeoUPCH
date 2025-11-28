@@ -1,33 +1,30 @@
-
-"""
 FROM python:3.10-slim
 
 # Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
     default-jre \
+    fluidsynth \
+    fluid-soundfont-gm \
     lilypond \
     timidity \
     wget \
     && rm -rf /var/lib/apt/lists/*
 
-# Descargar ANTLR
-RUN wget https://www.antlr.org/download/antlr-4.13.1-complete.jar \
-    -O /usr/local/lib/antlr-4.13.1-complete.jar
-
 # Configurar directorio de trabajo
 WORKDIR /app
 
-# Copiar archivos
+# Copiar requirements y instalar dependencias Python
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copiar todo el proyecto (incluye archivos .py ya generados)
 COPY . .
 
-# Generar parser
-RUN java -jar /usr/local/lib/antlr-4.13.1-complete.jar \
-    -Dlanguage=Python3 -visitor Algoritmia.g4
+# Crear directorio de salidas
+RUN mkdir -p static/outputs
 
-# Punto de entrada
-ENTRYPOINT ["python3", "algoritmia.py"]
-"""
+# Exponer puerto
+EXPOSE 10000
 
+# Comando de inicio
+CMD ["gunicorn", "--bind", "0.0.0.0:10000", "--timeout", "120", "web_app:app"]
