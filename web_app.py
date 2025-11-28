@@ -64,6 +64,7 @@ def convert_midi_to_wav(midi_path, wav_path):
                 r'C:\soundfonts\FluidR3_GM.sf2',
                 '/usr/share/sounds/sf2/FluidR3_GM.sf2',  # Linux
                 '/usr/share/soundfonts/default.sf2',
+                '/usr/share/sounds/sf2/default.sf2',  # Render
                 'C:\\soundfonts\\default.sf2',  # Windows
             ]
             
@@ -408,16 +409,21 @@ def system_info():
 
 
 if __name__ == '__main__':
+    import os
+    # Usar el puerto de Render o 5000 por defecto
+    port = int(os.environ.get('PORT', 5000))
+    
     print("=" * 70)
     print("🎵 Aplicación Web Algoritmia - Versión Mejorada 🎵".center(70))
     print("=" * 70)
-    print("\n📍 Servidor iniciado en: http://localhost:5000")
-    print("📍 También accesible desde: http://0.0.0.0:5000")
+    print(f"\n📍 Servidor iniciado en puerto: {port}")
+    print(f"📍 Host: 0.0.0.0")
     print("\n🔧 Herramientas disponibles:")
     print(f"   • Timidity: {'✓' if TIMIDITY_PATH and os.path.exists(TIMIDITY_PATH) else '✗'}")
     print(f"   • FluidSynth: {'✓' if FLUIDSYNTH_PATH else '✗'}")
     print(f"   • LilyPond: {'✓' if shutil.which('lilypond') else '✗'}")
-    print("\n💡 Presiona Ctrl+C para detener el servidor")
+    print("\n💡 Aplicación corriendo")
     print("=" * 70 + "\n")
 
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # IMPORTANTE: debug=False en producción
+    app.run(debug=False, host='0.0.0.0', port=port)
