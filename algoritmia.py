@@ -91,7 +91,7 @@ class AlgoritmiaInterpreter(AlgoritmiaVisitor):
         local_scope = {}
         for param, arg in zip(proc.params, args):
             if isinstance(arg, list):
-                local_scope[param] = arg.copy()  # Copiar listas
+                local_scope[param] = arg  # Copiar listas
             else:
                 local_scope[param] = arg
 
@@ -481,3 +481,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
