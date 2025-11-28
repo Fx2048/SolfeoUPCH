@@ -10,6 +10,12 @@ RUN apt-get update && apt-get install -y \
     wget \
     && rm -rf /var/lib/apt/lists/*
 
+# AGREGAR ESTAS LÍNEAS NUEVAS:
+# Configurar variables de entorno para LilyPond
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+ENV GUILE_AUTO_COMPILE=0
+
 # Configurar directorio de trabajo
 WORKDIR /app
 
