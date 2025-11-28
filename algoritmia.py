@@ -13,8 +13,6 @@ from AlgoritmiaVisitor import AlgoritmiaVisitor
 from typing import Any, Dict, List, Optional
 import subprocess
 
-# Ruta a Timidity
-TIMIDITY_PATH = r'C:\Users\USER\Downloads\TiMidity++-2.15.0-w32\TiMidity++-2.15.0\timidity.exe'
 # Mapeo de notas musicales a valores enteros
 NOTES = {
     # Notas sin número (octava central - octava 4)
@@ -427,23 +425,59 @@ def main():
 
         # Compilar con LilyPond
         try:
-            subprocess.run(['lilypond', '-o', base_name, ly_file],
-                           check=True, capture_output=True)
+            result = subprocess.run(
+                ['lilypond', '-o', base_name, ly_file],
+                capture_output=True,
+                text=True,
+                timeout=30
+            )
+            
+            if result.returncode != 0:
+                # IMPORTANTE: Usar sys.stderr para que web_app.py lo capture
+                error_msg = f"Error al generar archivos de salida: Command ['lilypond', '-o', '{base_name}', '{ly_file}']' returned non-zero exit status {result.returncode}."
+                
+                # Agregar detalles del error
+                if result.stderr:
+                    error_msg += f"\nLilyPond STDERR:\n{result.stderr}"
+                if result.stdout:
+                    error_msg += f"\nLilyPond STDOUT:\n{result.stdout}"
+                
+                sys.stderr.write(error_msg + "\n")
+                sys.exit(1)
+            
             print(f"Partitura generada: {base_name}.pdf")
+            
             # Generar WAV con timidity (buscar .mid o .midi)
             midi_file = base_name + '.mid'
             if not os.path.exists(midi_file):
                 midi_file = base_name + '.midi'
 
             if os.path.exists(midi_file):
-                subprocess.run([TIMIDITY_PATH, '-c', 'NUL', midi_file, '-Ow', '-o',
-                                base_name + '.wav'],
-                               check=True, capture_output=True)
-                print(f"Audio generado: {base_name}.wav")
-        except subprocess.CalledProcessError as e:
-            print(f"Error al generar archivos de salida: {e}")
+                # Detectar timidity
+                timidity_cmd = 'timidity'
+                
+                try:
+                    subprocess.run(
+                        [timidity_cmd, midi_file, '-Ow', '-o', base_name + '.wav'],
+                        capture_output=True,
+                        text=True,
+                        timeout=30,
+                        check=True
+                    )
+                    print(f"Audio generado: {base_name}.wav")
+                except (FileNotFoundError, subprocess.CalledProcessError):
+                    # No es crítico si falla WAV
+                    pass
+                    
+        except subprocess.TimeoutExpired:
+            sys.stderr.write("Error: LilyPond timeout (>30 segundos)\n")
+            sys.exit(1)
         except FileNotFoundError:
-            print("Advertencia: lilypond o timidity no encontrados en el sistema")
+            sys.stderr.write("Advertencia: lilypond o timidity no encontrados en el sistema\n")
+            # No es error fatal si no hay partitura
+        except Exception as e:
+            sys.stderr.write(f"Error al generar archivos de salida: {e}\n")
+            sys.exit(1)
 
 
 if __name__ == '__main__':
