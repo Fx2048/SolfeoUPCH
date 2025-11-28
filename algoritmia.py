@@ -423,20 +423,22 @@ def main():
         # Generar LilyPond
         ly_file = generate_lilypond(interpreter.score, input_file)
 
+        # Convertir a rutas absolutas para evitar problemas con lilypond
+        abs_base_name = os.path.abspath(base_name)
+        abs_ly_file = os.path.abspath(ly_file)
+
         # Compilar con LilyPond
         try:
             result = subprocess.run(
-                ['lilypond', '-o', base_name, ly_file],
+                ['lilypond', '-o', abs_base_name, abs_ly_file],
                 capture_output=True,
                 text=True,
                 timeout=30
             )
             
             if result.returncode != 0:
-                # IMPORTANTE: Usar sys.stderr para que web_app.py lo capture
-                error_msg = f"Error al generar archivos de salida: Command ['lilypond', '-o', '{base_name}', '{ly_file}']' returned non-zero exit status {result.returncode}."
+                error_msg = f"Error al generar archivos de salida: Command ['lilypond', '-o', '{abs_base_name}', '{abs_ly_file}']' returned non-zero exit status {result.returncode}."
                 
-                # Agregar detalles del error
                 if result.stderr:
                     error_msg += f"\nLilyPond STDERR:\n{result.stderr}"
                 if result.stdout:
@@ -447,13 +449,12 @@ def main():
             
             print(f"Partitura generada: {base_name}.pdf")
             
-            # Generar WAV con timidity (buscar .mid o .midi)
+            # Generar WAV con timidity
             midi_file = base_name + '.mid'
             if not os.path.exists(midi_file):
                 midi_file = base_name + '.midi'
 
             if os.path.exists(midi_file):
-                # Detectar timidity
                 timidity_cmd = 'timidity'
                 
                 try:
@@ -466,7 +467,6 @@ def main():
                     )
                     print(f"Audio generado: {base_name}.wav")
                 except (FileNotFoundError, subprocess.CalledProcessError):
-                    # No es crítico si falla WAV
                     pass
                     
         except subprocess.TimeoutExpired:
@@ -474,7 +474,6 @@ def main():
             sys.exit(1)
         except FileNotFoundError:
             sys.stderr.write("Advertencia: lilypond o timidity no encontrados en el sistema\n")
-            # No es error fatal si no hay partitura
         except Exception as e:
             sys.stderr.write(f"Error al generar archivos de salida: {e}\n")
             sys.exit(1)
