@@ -316,42 +316,54 @@ def get_examples():
         },
         'fibonacci': {
             'name': '🔄 Fibonacci Musical',
-            'code': '''Fibonacci n |:
-    if n <= 1 |:
-        (:) C
-    :| else |:
-        n1 <- n - 1
-        n2 <- n - 2
-        Fibonacci n1
-        Fibonacci n2
-    :|
-:|
-
-Main |:
+            'code': '''Main |:
     <w> "Secuencia de Fibonacci en música"
-    Fibonacci 5
+    
+    ### Generar secuencia de Fibonacci ###
+    melodia <- {}
+    a <- 0
+    b <- 1
+    i <- 0
+    
+    while i < 8 |:
+        ### Añadir nota correspondiente al número de Fibonacci ###
+        nota <- C + a
+        melodia << nota
+        
+        ### Siguiente número de Fibonacci ###
+        temp <- a + b
+        a <- b
+        b <- temp
+        i <- i + 1
+    :|
+    
+    <w> "Generando partitura con" #melodia "notas"
+    (:) melodia
+    <w> "Secuencia completada"
 :|'''
         },
         'hanoi': {
             'name': '🗼 Torres de Hanoi',
-            'code': '''Hanoi n origen destino auxiliar |:
+            'code': '''Hanoi n origen destino auxiliar melodia |:
     if n > 0 |:
         temp <- n - 1
-        Hanoi temp origen auxiliar destino
+        Hanoi temp origen auxiliar destino melodia
         
-        ### Tocar la nota correspondiente al disco ###
+        ### Agregar nota del movimiento ###
         nota <- C + n * 2
-        (:) nota
+        melodia << nota
         <w> "Mover disco" n "de" origen "a" destino
         
-        Hanoi temp auxiliar destino origen
+        Hanoi temp auxiliar destino origen melodia
     :|
 :|
 
 Main |:
     <w> "Torres de Hanoi con 3 discos"
-    Hanoi 3 1 3 2
-    <w> "Completado"
+    notas <- {}
+    Hanoi 3 1 3 2 notas
+    <w> "Generando partitura con" #notas "movimientos"
+    (:) notas
 :|'''
         },
         'melodia': {
