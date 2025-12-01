@@ -252,6 +252,18 @@ Para cada archivo `.alg` ejecutado con éxito, se generan:
 - **`archivo.pdf`** - Partitura en formato PDF
 - **`archivo.mid`** - Audio en formato MIDI
 - **`archivo.wav`** - Audio en formato WAV
+- 
+## ➡️ [Diagrama de flujo](https://github.com/Fx2048/SolfeoUPCH/blob/main/Diagrama_flujo.md)
+###  Flujo principal:
+
+ *  Validación inicial: Verificación de argumentos y existencia del archivo
+* Análisis: Léxico y sintáctico usando ANTLR4
+* Recolección: Identificación y almacenamiento de procedimientos
+* Ejecución: Invocación del procedimiento inicial con gestión de ámbitos
+* Procesamiento de instrucciones: Asignaciones, lectura/escritura, condicionales, bucles, listas y reproducción musical
+* Evaluación de expresiones: Variables, números, notas musicales, operaciones y listas
+* Generación de salida: Conversión de la partitura a formato LilyPond, compilación a PDF/MIDI y conversión a WAV
+
 
 ## 🐛 Solución de problemas
 
