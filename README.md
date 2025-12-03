@@ -85,17 +85,17 @@ pip install -r requirements.txt
 ### 4. Instalar herramientas externas
 
 #### LilyPond:
-- **Windows**: Descargar desde http://lilypond.org/download.html
+- **Windows**: Descargar desde [aquí](http://lilypond.org/download.html)
 - **Linux**: `sudo apt-get install lilypond`
 - **Mac**: `brew install lilypond`
 
 #### Timidity++:
-- **Windows**: Descargar desde https://sourceforge.net/projects/timidity/
+- **Windows**: Descargar desde [aquí](https://sourceforge.net/projects/timidity/)
 - **Linux**: `sudo apt-get install timidity`
 - **Mac**: `brew install timidity`
 
 #### FluidSynth:
-- **Windows**: Descargar desde https://www.fluidsynth.org/ (se recomienda la versión con instalador o usar MSYS2 para instalar fluidsynth)
+- **Windows**: Descargar desde [aquí](https://www.fluidsynth.org/) (se recomienda la versión con instalador o usar MSYS2 para instalar fluidsynth)
 - **Linux**: `sudo apt-get install fluidsynth` (Debian/Ubuntu) o `sudo dnf install fluidsynth` (Fedora)
 - **Mac**: `brew install fluidsynth`
 
