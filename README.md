@@ -17,11 +17,13 @@
 </p>
 
   
-    # 🎵 Algoritmia - Lenguaje de Programación Musical
-
-Intérprete de Algoritmia desarrollado como proyecto final para el curso de **Implementación de Lenguajes de Programación** de la Universidad Peruana Cayetano Heredia.
-
-Algoritmia es un lenguaje de programación orientado a la composición algorítmica que permite generar partituras musicales en formato PDF, MIDI y WAV.
+    # 🎵 Algoritmia - Lenguaje de Programación Musical - Doble Intérprete
+<p align="justify">
+Intérprete de Algoritmia es desarrollado como proyecto final para el curso de **Implementación de Lenguajes de Programación** de la Universidad Peruana Cayetano Heredia.
+</p>
+<p align="justify">
+Algoritmia es un lenguaje de programación orientado a la composición algorítmica que permite generar partituras musicales en formato PDF, MIDI y WAV, en base a reglas Sintácticas y Léxicas.
+</p>
 
 ## 📋 Características
 
@@ -47,6 +49,7 @@ Algoritmia es un lenguaje de programación orientado a la composición algorítm
 - **ANTLR 4.13.1**
 - **LilyPond** (para generar partituras)
 - **Timidity++** (para generar archivos WAV)
+- **FluidSynth** (Para repuesto en generación de audio)
 
 ### Librerías Python:
 
@@ -90,6 +93,11 @@ pip install -r requirements.txt
 - **Windows**: Descargar desde https://sourceforge.net/projects/timidity/
 - **Linux**: `sudo apt-get install timidity`
 - **Mac**: `brew install timidity`
+
+#### FluidSynth:
+- **Windows**: Descargar desde https://www.fluidsynth.org/ (se recomienda la versión con instalador o usar MSYS2 para instalar fluidsynth)
+- **Linux**: `sudo apt-get install fluidsynth` (Debian/Ubuntu) o `sudo dnf install fluidsynth` (Fedora)
+- **Mac**: `brew install fluidsynth`
 
 ### 5. Generar parser de ANTLR
 
@@ -272,16 +280,17 @@ Para cada archivo `.alg` ejecutado con éxito, se generan:
 - **`archivo.mid`** - Audio en formato MIDI
 - **`archivo.wav`** - Audio en formato WAV
 - 
-## ➡️ [Diagrama de flujo](https://github.com/Fx2048/SolfeoUPCH/blob/main/Diagrama_flujo.md)
+## ➡️ [Diagrama de flujo](https://github.com/Fx2048/SolfeoUPCH/blob/main/Diagrama de flujo/Diagrama_flujo.md)
+
 ###  Flujo principal:
 
- *  Validación inicial: Verificación de argumentos y existencia del archivo
-* Análisis: Léxico y sintáctico usando ANTLR4
-* Recolección: Identificación y almacenamiento de procedimientos
-* Ejecución: Invocación del procedimiento inicial con gestión de ámbitos
-* Procesamiento de instrucciones: Asignaciones, lectura/escritura, condicionales, bucles, listas y reproducción musical
-* Evaluación de expresiones: Variables, números, notas musicales, operaciones y listas
-* Generación de salida: Conversión de la partitura a formato LilyPond, compilación a PDF/MIDI y conversión a WAV
+* **Validación inicial**: Verificación de argumentos y existencia del archivo
+* **Análisis**: Léxico y sintáctico usando ANTLR4
+* **Recolección**: Identificación y almacenamiento de procedimientos
+* **Ejecución**: Invocación del procedimiento inicial con gestión de ámbitos
+* **Procesamiento de instrucciones**: Asignaciones, lectura/escritura, condicionales, bucles, listas y reproducción musical
+* **Evaluación de expresiones**: Variables, números, notas musicales, operaciones y listas
+* **Generación de salida**: Conversión de la partitura a formato LilyPond, compilación a PDF/MIDI y conversión a WAV
 
 
 ## 🐛 Solución de problemas
@@ -307,10 +316,10 @@ Proyecto desarrollado para el curso de Implementación de Lenguajes de Programac
 
 **Universidad Peruana Cayetano Heredia**
 
-1. Frank Jauregui Bendezu
-2. Jesus Morales Alvarado
-3. Brigitte Bernal
-4. Nardy Condori
+1. Frank Kevin Jauregui Bendezu
+2. Jesus Anselmo Morales Alvarado
+3. Brigitte Bernal Belisario
+4. Nardy Liz Condori Mamani
 
 ## 📄 Licencia
 
