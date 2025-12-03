@@ -1,3 +1,25 @@
+<hr style="border: 1px solid #1E90FF;">
+
+[![UPCH](https://img.shields.io/badge/UPCH-%20-101010?style=for-the-badge&logo=universities&logoColor=white&labelColor=FFD700)](https://www.cayetano.edu.pe/)
+[![Python](https://img.shields.io/badge/Python-%20-101010?style=for-the-badge&logo=python&logoColor=white&labelColor=FFD43B)](https://www.python.org/)
+[![ANTLR](https://img.shields.io/badge/ANTLR-%20-101010?style=for-the-badge&logo=antlr&logoColor=white&labelColor=FF5252)](https://www.antlr.org/)
+[![Flask](https://img.shields.io/badge/Flask-%20-101010?style=for-the-badge&logo=flask&logoColor=white&labelColor=000000)](https://flask.palletsprojects.com/)
+[![HTML](https://img.shields.io/badge/HTML-%20-101010?style=for-the-badge&logo=html5&logoColor=white&labelColor=E34F26)](https://developer.mozilla.org/es/docs/Web/HTML)
+[![CSS](https://img.shields.io/badge/CSS-%20-101010?style=for-the-badge&logo=css3&logoColor=white&labelColor=264de4)](https://developer.mozilla.org/es/docs/Web/CSS)
+[![JavaScript](https://img.shields.io/badge/JS-%20-101010?style=for-the-badge&logo=javascript&logoColor=white&labelColor=f7df1e)](https://developer.mozilla.org/es/docs/Web/JavaScript)
+[![FluidSynth](https://img.shields.io/badge/FluidSynth-%20-101010?style=for-the-badge&logo=musicbrainz&logoColor=white&labelColor=2ECC71)](https://www.fluidsynth.org/)
+[![TiMidity](https://img.shields.io/badge/TiMidity-%20-101010?style=for-the-badge&logo=musicbrainz&logoColor=white&labelColor=8E44AD)](http://timidity.sourceforge.net/)
+[![LilyPond](https://img.shields.io/badge/LilyPond-%20-101010?style=for-the-badge&logo=musicbrainz&logoColor=white&labelColor=1ABC9C)](https://lilypond.org/)
+
+<p align="center">
+  <a href="https://cayetano.edu.pe/">
+    <img src="https://readme-typing-svg.herokuapp.com?font=Time+New+Roman&color=F1C40F&size=25&center=true&vCenter=true&width=700&height=100&lines=UNIVERSIDAD+PERUANA+CAYETANO+HEREDIA;LENGUAJE+DE+PROGRAMACIÓN+MUSICAL;PROYECTO+DE+ALGORITMIA">
+  </a>
+</p>
+
+
+
+    
     # 🎵 Algoritmia - Lenguaje de Programación Musical
 
 Intérprete de Algoritmia desarrollado como proyecto final para el curso de **Implementación de Lenguajes de Programación** de la Universidad Peruana Cayetano Heredia.
