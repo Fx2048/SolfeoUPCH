@@ -291,6 +291,7 @@ Para cada archivo `.alg` ejecutado con éxito, se generan:
 * **Evaluación de expresiones**: Variables, números, notas musicales, operaciones y listas
 * **Generación de salida**: Conversión de la partitura a formato LilyPond, compilación a PDF/MIDI y conversión a WAV
 
+### [Diagrama de Flujo del Proyecto](https://github.com/Fx2048/SolfeoUPCH/blob/e0123d49a612da922b4776ba402084d3ba905b66/Diagrama_de_flujo/Diagrama_flujo.md)
 
 ## 🐛 Solución de problemas
 
