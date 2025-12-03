@@ -280,7 +280,7 @@ Para cada archivo `.alg` ejecutado con éxito, se generan:
 - **`archivo.mid`** - Audio en formato MIDI
 - **`archivo.wav`** - Audio en formato WAV
 - 
-#### ➡️ [Diagrama de flujo](https://github.com/Fx2048/SolfeoUPCH/blob/main/Diagrama_flujo.md)
+#### ➡️ [Diagrama de flujo](Diagrama de flujo/Diagrama_flujo.md)
 
 ###  Flujo principal:
 
