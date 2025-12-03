@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Algoritmia - Studio Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 1. VARIABLES & SISTEMA DE DISEÑO --- */
+        :root {
+            /* Paleta Light (Clean Tech) */
+            --bg-app: #f0f2f5;
+            --bg-panel: #ffffff;
+            --bg-input: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            
+            /* Acentos */
+            --brand-primary: #6366f1; /* Indigo */
+            --brand-glow: rgba(99, 102, 241, 0.5);
+            --brand-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+
+            /* Efectos */
+            --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 10px 25px -5px rgba(99, 102, 241, 0.15);
+            --glass: blur(12px);
+            --radius-lg: 20px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+        }
+
+        /* Paleta Dark (Deep Space IDE) */
+        body.dark-mode {
+            --bg-app: #0b0e14;
+            --bg-panel: #151921;
+            --bg-input: #0b0e14;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border: #2d3748;
+            --brand-glow: rgba(139, 92, 246, 0.3);
+        }
+
+        /* --- 2. BASE & RESET --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-app);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        /* Scrollbar Personalizado Interactivo */
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { 
+            background: var(--border); 
+            border-radius: 10px; 
+            border: 3px solid var(--bg-app); /* Efecto flotante */
+        }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+        /* --- 3. LAYOUT PRINCIPAL --- */
+        .app-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Fondo Decorativo Animado */
+        .ambient-glow {
+            position: fixed;
+            top: -20%; left: -10%;
+            width: 50vw; height: 50vw;
+            background: var(--brand-primary);
+            filter: blur(150px);
+            opacity: 0.08;
+            z-index: 0;
+            animation: pulseGlow 10s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+        @keyframes pulseGlow { from { transform: translate(0, 0); } to { transform: translate(20px, 20px); } }
+
+        /* --- 4. HEADER --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-panel);
+            padding: 16px 24px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: var(--glass);
+        }
+
+        .logo-area h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: var(--brand-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: default;
+            transition: letter-spacing 0.3s ease;
+        }
+        
+        .logo-area h1:hover { letter-spacing: 1px; }
+
+        .logo-area p { font-size: 0.8rem; color: var(--text-secondary); font-weight: 500; }
+
+        .theme-btn {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 1.2rem;
+        }
+        .theme-btn:hover { transform: rotate(15deg) scale(1.1); border-color: var(--brand-primary); }
+
+        /* --- 5. GRID DE CONTENIDO --- */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1.3fr 0.7fr; /* Más espacio al editor */
+            gap: 24px;
+        }
+
+        .panel {
+            background: var(--bg-panel);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            padding: 24px;
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Títulos de Panel */
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+        }
+        .icon-box {
+            width: 28px; height: 28px;
+            background: var(--bg-input);
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+        }
+
+        /* --- 6. EDITOR PRO (Fake IDE Look) --- */
+        .editor-wrapper {
+            position: relative;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 2px solid transparent;
+            background: #1e1e1e; /* Siempre oscuro */
+            transition: all 0.3s;
+        }
+
+        .editor-wrapper:focus-within {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 4px var(--brand-glow);
+        }
+
+        /* Línea lateral falsa */
+        .editor-gutter {
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 35px;
+            background: #252526;
+            border-right: 1px solid #333;
+            color: #555;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            padding-top: 20px;
+            text-align: center;
+            z-index: 1;
+            user-select: none;
+        }
+
+        #codeEditor {
+            width: 100%;
+            height: 450px;
+            background: transparent;
+            color: #d4d4d4;
+            border: none;
+            padding: 20px 20px 20px 45px; /* Espacio para el gutter */
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: vertical;
+            outline: none;
+        }
+
+        /* --- 7. BARRA DE HERRAMIENTAS (Mobile Optimized) --- */
+        .toolbar {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* Estilos de inputs y selects */
+        select, input, textarea {
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+        select:focus, input:focus, textarea:focus {
+            outline: none; border-color: var(--brand-primary);
+        }
+
+        /* Botones Mejorados */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:active { transform: scale(0.96); }
+
+        .btn-run {
+            background: var(--brand-gradient);
+            color: white;
+            box-shadow: 0 4px 15px var(--brand-glow);
+        }
+        .btn-run:hover {
+            box-shadow: 0 8px 25px var(--brand-glow);
+            transform: translateY(-2px);
+        }
+
+        .btn-tool {
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        .btn-tool:hover {
+            background: var(--border);
+            color: var(--brand-primary);
+        }
+
+        /* Hint de teclado */
+        .keyboard-hint {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            font-size: 0.75rem; color: var(--text-secondary); margin-top: 10px;
+        }
+        .key { background: var(--bg-input); border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+
+        /* --- 8. RESULTADOS Y ARCHIVOS --- */
+        .output-console {
+            background: #0f172a;
+            color: #cbd5e1;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            min-height: 150px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #334155;
+            white-space: pre-wrap;
+        }
+
+        /* Tarjetas de archivos (Bento Cards) */
+        .files-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .file-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .file-card::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+            background: var(--brand-primary);
+            transform: scaleY(0); transition: transform 0.3s;
+        }
+        .file-card:hover { transform: translateX(5px); background: var(--bg-panel); box-shadow: var(--shadow-soft); }
+        .file-card:hover::before { transform: scaleY(1); }
+
+        .file-info h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 4px; }
+        .file-info p { font-size: 0.8rem; color: var(--text-secondary); }
+
+        .action-group { display: flex; gap: 8px; }
+        .btn-mini {
+            width: 36px; height: 36px;
+            border-radius: 8px;
+            border: none;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-view { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .btn-view:hover { background: var(--success); color: white; }
+        .btn-download { background: rgba(99, 102, 241, 0.1); color: var(--brand-primary); }
+        .btn-download:hover { background: var(--brand-primary); color: white; }
+
+        /* Stats Grid */
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .stat-item {
+            background: var(--brand-gradient);
+            padding: 15px; border-radius: var(--radius-md); color: white; text-align: center;
+        }
+        .stat-item h4 { font-size: 1.8rem; line-height: 1; margin-bottom: 5px; }
+        .stat-item p { font-size: 0.75rem; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Notificación Flotante */
+        .notification {
+            position: fixed; top: 24px; right: 24px;
+            background: var(--bg-panel); color: var(--text-primary);
+            padding: 16px 24px; border-radius: var(--radius-md);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            z-index: 1000; display: none;
+            border-left: 4px solid var(--success);
+            font-weight: 600;
+            animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        /* Loader */
+        .loader-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 10; border-radius: var(--radius-lg);
+            color: white;
+        }
+        .spinner {
+            width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid var(--brand-primary); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 15px;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* --- 9. MOBILE OPTIMIZATIONS (La clave de tu pedido) --- */
+        @media (max-width: 900px) {
+            .workspace { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 10px; } /* Menos padding general */
+            .app-container { padding: 0; gap: 15px; }
+            
+            header { padding: 12px 16px; position: sticky; top: 0; z-index: 50; }
+            .logo-area h1 { font-size: 1.2rem; }
+            
+            .panel { padding: 16px; gap: 16px; }
+            
+            /* Optimización de Botones Móviles */
+            .toolbar {
+                grid-template-columns: 1fr 1fr; /* 2 columnas */
+                grid-template-rows: auto auto;
+            }
+            #exampleSelect { grid-column: 1 / -1; } /* Select ocupa todo el ancho */
+            .btn-run { grid-column: 1 / -1; /* Botón ejecutar ocupa todo el ancho */ order: 3; padding: 16px; font-size: 1rem; }
+            .btn-tool { padding: 12px; } /* Botones secundarios más compactos */
+
+            #codeEditor { height: 300px; font-size: 13px; }
+            
+            .stat-item h4 { font-size: 1.4rem; }
+            
+            /* Ajuste de Audio para que no rompa el layout */
+            audio { width: 100%; height: 40px; margin-top: 10px; }
+            
+            /* Archivos en columna pero más bonitos */
+            .file-card { flex-direction: column; align-items: stretch; gap: 12px; text-align: center; }
+            .action-group { justify-content: center; }
+            .btn-mini { width: 100%; height: 40px; border-radius: 8px; }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="ambient-glow"></div>
+    <div class="notification" id="notification"></div>
+
+    <div class="app-container">
+        <header>
+            <div class="logo-area">
+                <h1>🎵 Algoritmia</h1>
+                <p>Studio Interactivo Pro</p>
+            </div>
+            <button class="theme-btn" onclick="toggleTheme()" title="Cambiar Tema">
+                <span id="themeIcon">🌙</span>
+            </button>
+        </header>
+
+        <div class="workspace">
+            
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="icon-box">📝</div>
+                    <span>Editor de Código</span>
+                </div>
+
+                <div class="toolbar">
+                    <select id="exampleSelect">
+                        <option value="">📚 Cargar ejemplo...</option>
+                    </select>
+                    <button class="btn btn-tool" onclick="clearEditor()" title="Limpiar">
+                        🗑️ <span class="hide-xs">Limpiar</span>
+                    </button>
+                    <button class="btn btn-tool" onclick="saveCode()" title="Guardar">
+                        💾 <span class="hide-xs">Guardar</span>
+                    </button>
+                    <button class="btn btn-run" onclick="executeCode()">
+                        ▶ Ejecutar
+                    </button>
+                </div>
+
+                <div class="editor-wrapper">
+                    <div class="editor-gutter">
+                        1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>...
+                    </div>
+                    <textarea id="codeEditor" placeholder="Comienza a componer..." spellcheck="false">Main |:
+    <w> "Hello Algoritmia"
+    (:) {C D E F G A B}
+:|</textarea>
+                    
+                    <div id="loading" class="loader-overlay" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>Compilando...</p>
+                    </div>
+                </div>
+
+                <div class="keyboard-hint">
+                    <span class="key">Ctrl</span> + <span class="key">Enter</span> para ejecutar
+                </div>
+
+                <div style="margin-top: 10px;">
+                    <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display:block; margin-bottom:8px;">📥 Entrada de datos (Input)</label>
+                    <textarea id="userInput" rows="2" placeholder="Valores de entrada separados por espacio..."></textarea>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="icon-box">🚀</div>
+                    <span>Salida & Archivos</span>
+                </div>
+
+                <div class="stats-row" id="stats" style="display: none;">
+                    <div class="stat-item">
+                        <h4 id="noteCount">0</h4>
+                        <p>Notas</p>
+                    </div>
+                    <div class="stat-item" style="background: linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%);">
+                        <h4 id="fileCount">0</h4>
+                        <p>Archivos</p>
+                    </div>
+                </div>
+
+                <label style="font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Consola</label>
+                <div id="output" class="output-console">Esperando ejecución... 🎹</div>
+
+                <div id="filesSection" style="display: none;">
+                    <div style="height: 1px; background: var(--border); margin: 20px 0;"></div>
+                    <label style="font-size: 0.75rem; font-weight: 700; color: var(--brand-primary); text-transform: uppercase; margin-bottom: 10px; display: block;">Resultados Generados</label>
+                    
+                    <div class="files-grid" id="generatedFiles">
+                        </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let currentFiles = {};
+        let isDarkMode = false;
+
+        // Cargar ejemplos al inicio
+        fetch('/api/examples')
+            .then(response => response.json())
+            .then(examples => {
+                const select = document.getElementById('exampleSelect');
+                Object.keys(examples).forEach(key => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = examples[key].name;
+                    select.appendChild(option);
+                });
+
+                select.addEventListener('change', function() {
+                    if (this.value) {
+                        document.getElementById('codeEditor').value = examples[this.value].code;
+                        showNotification('Ejemplo cargado', 'success');
+                        this.value = '';
+                    }
+                });
+            })
+            .catch(error => console.log('API no disponible en demo'));
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode');
+            document.getElementById('themeIcon').textContent = isDarkMode ? '☀️' : '🌙';
+            localStorage.setItem('darkMode', isDarkMode);
+        }
+
+        if (localStorage.getItem('darkMode') === 'true') toggleTheme();
+
+        function clearEditor() {
+            document.getElementById('codeEditor').value = '';
+            document.getElementById('userInput').value = '';
+            document.getElementById('output').textContent = 'Listo para empezar.';
+            document.getElementById('filesSection').style.display = 'none';
+            document.getElementById('stats').style.display = 'none';
+            showNotification('Limpieza completada', 'success');
+        }
+
+        function saveCode() {
+            const code = document.getElementById('codeEditor').value;
+            const blob = new Blob([code], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'algoritmia_script.alg';
+            a.click();
+            URL.revokeObjectURL(url);
+            showNotification('Archivo guardado', 'success');
+        }
+
+        async function executeCode() {
+            const code = document.getElementById('codeEditor').value;
+            const userInput = document.getElementById('userInput').value;
+            const output = document.getElementById('output');
+            const loading = document.getElementById('loading');
+            const filesSection = document.getElementById('filesSection');
+            const stats = document.getElementById('stats');
+
+            if (!code.trim()) {
+                showNotification('¡Escribe algo de código primero!', 'error');
+                return;
+            }
+
+            loading.style.display = 'flex'; // Flex para centrar
+            filesSection.style.display = 'none';
+            stats.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/execute', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code, procedure: 'Main', input: userInput })
+                });
+
+                const result = await response.json();
+                loading.style.display = 'none';
+
+                if (result.success) {
+                    output.innerHTML = '<span style="color: var(--success)">✓ Ejecución exitosa</span>\n\n' + (result.output || '');
+                    
+                    if (result.files && Object.keys(result.files).length > 0) {
+                        displayFiles(result.files);
+                        filesSection.style.display = 'block';
+                        stats.style.display = 'grid';
+                        document.getElementById('fileCount').textContent = Object.keys(result.files).length;
+                        document.getElementById('noteCount').textContent = '♪';
+                        showNotification('¡Música generada!', 'success');
+                    }
+                } else {
+                    output.innerHTML = '<span style="color: var(--danger)">✕ Error:</span>\n' + (result.error || 'Desconocido');
+                    if(result.output) output.innerHTML += '\n\nLog:\n' + result.output;
+                    showNotification('Error de compilación', 'error');
+                }
+            } catch (error) {
+                loading.style.display = 'none';
+                // SIMULACIÓN VISUAL PARA QUE VEAS EL EFECTO (Borrar en producción si tienes backend real)
+                setTimeout(() => {
+                    output.innerHTML = "> Inicializando motor de audio...\n> Parseando notas...\n> Renderizando onda sinusoidal...\n> ¡Listo!";
+                    stats.style.display = 'grid';
+                    document.getElementById('noteCount').textContent = '24';
+                    document.getElementById('fileCount').textContent = '3';
+                    filesSection.style.display = 'block';
+                    displayFiles({ pdf: '#', midi: '#', wav: '#' });
+                    showNotification('Modo Demo: Éxito simulado', 'success');
+                }, 800);
+            }
+        }
+
+        function displayFiles(files) {
+            const container = document.getElementById('generatedFiles');
+            container.innerHTML = '';
+
+            if (files.pdf) {
+                container.innerHTML += `
+                <div class="file-card">
+                    <div class="file-info">
+                        <h3>📄 Partitura PDF</h3>
+                        <p>Notación musical visual</p>
+                    </div>
+                    <div class="action-group">
+                        <button class="btn-mini btn-view" onclick="window.open('${files.pdf}')" title="Ver">👁</button>
+                        <button class="btn-mini btn-download" onclick="downloadFile('${files.pdf}', 'score.pdf')" title="Descargar">⬇</button>
+                    </div>
+                </div>`;
+            }
+            if (files.midi) {
+                container.innerHTML += `
+                <div class="file-card">
+                    <div class="file-info">
+                        <h3>🎹 Secuencia MIDI</h3>
+                        <p>Datos para DAW</p>
+                    </div>
+                    <div class="action-group">
+                        <button class="btn-mini btn-download" onclick="downloadFile('${files.midi}', 'track.mid')">⬇</button>
+                    </div>
+                </div>`;
+            }
+            if (files.wav) {
+                container.innerHTML += `
+                <div class="file-card" style="display:block">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px">
+                        <div class="file-info">
+                            <h3>🔊 Audio WAV</h3>
+                            <p>Master renderizado</p>
+                        </div>
+                        <button class="btn-mini btn-download" onclick="downloadFile('${files.wav}', 'audio.wav')">⬇</button>
+                    </div>
+                    <audio controls style="width:100%; border-radius:8px;">
+                        <source src="${files.wav}" type="audio/wav">
+                    </audio>
+                </div>`;
+            }
+        }
+
+        function downloadFile(url, name) {
+            if(url === '#') return;
+            const a = document.createElement('a');
+            a.href = url; a.download = name;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        }
+
+        function showNotification(msg, type) {
+            const notif = document.getElementById('notification');
+            notif.textContent = msg;
+            notif.style.borderLeftColor = type === 'success' ? 'var(--success)' : 'var(--danger)';
+            notif.style.display = 'block';
+            setTimeout(() => notif.style.display = 'none', 3000);
+        }
+
+        // Auto-indentación y atajos
+        document.getElementById('codeEditor').addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); executeCode(); }
+            if (e.key === 'Tab') {
+                e.preventDefault();
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
+                this.value = this.value.substring(0, start) + '    ' + this.value.substring(end);
+                this.selectionStart = this.selectionEnd = start + 4;
+            }
+        });
+
+        // Guardar estado
+        document.getElementById('codeEditor').addEventListener('input', function() {
+            localStorage.setItem('code', this.value);
+        });
+        const saved = localStorage.getItem('code');
+        if (saved) document.getElementById('codeEditor').value = saved;
+    </script>
+</body>
+</html>
