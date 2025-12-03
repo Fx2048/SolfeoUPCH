@@ -279,8 +279,7 @@ Para cada archivo `.alg` ejecutado con éxito, se generan:
 - **`archivo.pdf`** - Partitura en formato PDF
 - **`archivo.mid`** - Audio en formato MIDI
 - **`archivo.wav`** - Audio en formato WAV
-- 
-#### ➡️ [Diagrama de flujo](Diagrama de flujo/Diagrama_flujo.md)
+
 
 ###  Flujo principal:
 
@@ -295,16 +294,21 @@ Para cada archivo `.alg` ejecutado con éxito, se generan:
 
 ## 🐛 Solución de problemas
 
-### Error: "No such file or directory: algoritmia.py"
+```
+Error: "No such file or directory: algoritmia.py
+```
 Asegúrate de estar en el directorio correcto del proyecto.
-
-### Error: "java: command not found"
+```
+Error: "java: command not found"
+```
 Instala Java JDK y agrégalo al PATH del sistema.
-
-### Error: "lilypond: command not found"
+```
+Error: "lilypond: command not found"
+```
 Instala LilyPond y agrégalo al PATH del sistema.
-
-### Error: "timidity: Can't read configuration file"
+```
+Error: "timidity: Can't read configuration file"
+```
 En Windows, ejecuta timidity con el parámetro `-c NUL`:
 ```bash
 timidity -c NUL archivo.mid -Ow -o archivo.wav
