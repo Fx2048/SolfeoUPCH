@@ -15,11 +15,16 @@ from datetime import datetime
 import traceback
 import platform
 
-app = Flask(__name__)
+# Configurar rutas absolutas para templates y static
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+app = Flask(__name__, 
+            template_folder=os.path.join(BASE_DIR, 'templates'),
+            static_folder=os.path.join(BASE_DIR, 'static'))
 CORS(app)
 
 # Configuración
-OUTPUT_DIR = os.path.join('static', 'outputs')
+OUTPUT_DIR = os.path.join(BASE_DIR, 'static', 'outputs')
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # Detectar sistema operativo y configurar rutas
@@ -156,15 +161,17 @@ def execute_code():
         with open(temp_alg, 'w', encoding='utf-8') as f:
             f.write(code)
 
-        # Ejecutar intérprete
+        # Ejecutar intérprete - CAMBIO IMPORTANTE: usar ruta correcta a algoritmia.py
+        algoritmia_path = os.path.join(os.path.dirname(__file__), 'algoritmia.py')
+        
         try:
             process = subprocess.Popen(
-                [sys.executable, 'algoritmia.py', temp_alg, procedure],
+                [sys.executable, algoritmia_path, temp_alg, procedure],
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
-                cwd=os.getcwd()
+                cwd=os.path.dirname(__file__)  # Ejecutar desde src/
             )
 
             stdout, stderr = process.communicate(input=user_input, timeout=30)
@@ -412,6 +419,30 @@ Main |:
     <w> "¡Partitura de" #notas "notas lista!"
 :|'''
         },
+        'interactivo': {
+            'name': '🎹 Melodía Interactiva (usa Input)',
+            'code': '''Main |:
+    <w> "=== COMPOSITOR INTERACTIVO ==="
+    <w> "Nota inicial (23=C4):"
+    <?> inicio
+    
+    <w> "¿Cuántas notas? (5-20)"
+    <?> cantidad
+    
+    <w> "Paso (1-3):"
+    <?> paso
+    
+    melodia <- {}
+    i <- 0
+    while i < cantidad |:
+        melodia << inicio + i * paso
+        i <- i + 1
+    :|
+    
+    <w> "¡Melodía con" #melodia "notas!"
+    (:) melodia
+:|'''
+        },
         'melodia': {
             'name': '🎵 Melodía Simple',
             'code': '''Main |:
@@ -458,10 +489,11 @@ def system_info():
         'platform': platform.system(),
         'python_version': sys.version,
         'has_timidity': TIMIDITY_PATH is not None and os.path.exists(TIMIDITY_PATH) if TIMIDITY_PATH else False,
-        'has_fluidsynth': FLUIDSYNTH_PATH is not None,
+        'has_fluidsynth': FLUIDSYNTH_PATH is not None and os.path.exists(FLUIDSYNTH_PATH),
         'has_lilypond': shutil.which('lilypond') is not None,
         'output_dir': OUTPUT_DIR,
-        'working_dir': os.getcwd()
+        'working_dir': os.getcwd(),
+        'base_dir': BASE_DIR
     }
     return jsonify(info)
 
@@ -476,9 +508,12 @@ if __name__ == '__main__':
     print("=" * 70)
     print(f"\n📍 Servidor iniciado en puerto: {port}")
     print(f"📍 Host: 0.0.0.0")
+    print(f"📁 Base Dir: {BASE_DIR}")
+    print(f"📁 Templates: {os.path.join(BASE_DIR, 'templates')}")
+    print(f"📁 Static: {os.path.join(BASE_DIR, 'static')}")
     print("\n🔧 Herramientas disponibles:")
     print(f"   • Timidity: {'✓' if TIMIDITY_PATH and os.path.exists(TIMIDITY_PATH) else '✗'}")
-    print(f"   • FluidSynth: {'✓' if FLUIDSYNTH_PATH else '✗'}")
+    print(f"   • FluidSynth: {'✓' if FLUIDSYNTH_PATH and os.path.exists(FLUIDSYNTH_PATH) else '✗'}")
     print(f"   • LilyPond: {'✓' if shutil.which('lilypond') else '✗'}")
     print("\n💡 Aplicación corriendo")
     print("=" * 70 + "\n")
