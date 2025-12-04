@@ -349,9 +349,12 @@ def get_examples():
         temp <- n - 1
         Hanoi temp origen auxiliar destino melodia
         
-        ### Agregar nota del movimiento ###
-        nota <- C + n * 2
+        ### Agregar 3 notas por cada movimiento ###
+        nota <- C + n * 3
         melodia << nota
+        melodia << nota + 2
+        melodia << nota - 1
+        
         <w> "Mover disco" n "de" origen "a" destino
         
         Hanoi temp auxiliar destino origen melodia
@@ -359,11 +362,54 @@ def get_examples():
 :|
 
 Main |:
-    <w> "Torres de Hanoi con 3 discos"
+    <w> "=== Torres de Hanoi Musical ==="
+    <w> "Resolviendo con 4 discos..."
     notas <- {}
-    Hanoi 3 1 3 2 notas
-    <w> "Generando partitura con" #notas "movimientos"
+    
+    ### 4 discos = 15 movimientos × 3 notas = 45 notas ###
+    Hanoi 4 1 3 2 notas
+    
+    <w> "Solución completada"
+    <w> "Total de notas generadas:" #notas
+    <w> "Generando partitura..."
     (:) notas
+    <w> "¡Partitura lista!"
+:|'''
+        },
+        'hanoi_largo': {
+            'name': '🗼 Torres de Hanoi (Partitura Larga)',
+            'code': '''Hanoi n origen destino auxiliar melodia |:
+    if n > 0 |:
+        temp <- n - 1
+        Hanoi temp origen auxiliar destino melodia
+        
+        ### Generar 5 notas por cada movimiento ###
+        base <- C + n * 3
+        melodia << base
+        melodia << base + 2
+        melodia << base + 4
+        melodia << base + 2
+        melodia << base - 1
+        
+        <w> "Mover disco" n "de" origen "a" destino
+        
+        Hanoi temp auxiliar destino origen melodia
+    :|
+:|
+
+Main |:
+    <w> "=== Torres de Hanoi - Versión Extendida ==="
+    <w> "Resolviendo con 5 discos..."
+    notas <- {}
+    
+    ### 5 discos = 31 movimientos × 5 notas = 155 notas ###
+    Hanoi 5 1 3 2 notas
+    
+    <w> "Solución completada"
+    <w> "Total de notas generadas:" #notas
+    <w> "Generando partitura completa..."
+    (:) notas
+    <w> "¡Partitura de" #notas "notas lista!"
 :|'''
         },
         'melodia': {
