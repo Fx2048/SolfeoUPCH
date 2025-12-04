@@ -16,7 +16,7 @@ import subprocess
 # Mapeo de notas musicales a valores enteros
 NOTES = {
     # Notas sin número (octava central - octava 4)
-    'C': 28, 'D': 29, 'E': 30, 'F': 31, 'G': 32, 'A': 33, 'B': 34,
+    'C': 23, 'D': 24, 'E': 25, 'F': 26, 'G': 27, 'A': 28, 'B': 29,
     # Notas con números (octavas 0-8)
     'A0': 0, 'B0': 1,
     'C1': 2, 'D1': 3, 'E1': 4, 'F1': 5, 'G1': 6, 'A1': 7, 'B1': 8,
@@ -87,23 +87,27 @@ class AlgoritmiaInterpreter(AlgoritmiaVisitor):
                 f"pero se pasaron {len(args)}"
             )
 
-        # Crear nuevo ámbito local
+        # Crear nuevo ámbito con solo los parámetros
         local_scope = {}
         for param, arg in zip(proc.params, args):
-            if isinstance(arg, list):
-                local_scope[param] = arg  # Copiar listas
-            else:
-                local_scope[param] = arg
+            local_scope[param] = arg  # Las listas se pasan por referencia
 
-        # Guardar scope anterior y establecer el nuevo
+        # Guardar scope anterior y mergear con el nuevo
         prev_scope = self.current_scope
-        self.current_scope = local_scope
-        self.call_stack.append(local_scope)
+        merged_scope = {**prev_scope, **local_scope}
+        self.current_scope = merged_scope
+        self.call_stack.append(merged_scope)
 
         # Ejecutar el bloque del procedimiento
         try:
             self.visit(proc.block)
         finally:
+            # Actualizar variables en el scope anterior (para listas por referencia)
+            for param, arg in zip(proc.params, args):
+                if isinstance(arg, list) and param in self.current_scope:
+                    # La lista ya está modificada por referencia, no hay que hacer nada
+                    pass
+
             # Restaurar scope anterior
             self.call_stack.pop()
             self.current_scope = prev_scope
